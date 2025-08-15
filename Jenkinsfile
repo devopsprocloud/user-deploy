@@ -6,7 +6,7 @@ pipeline {
     }
     parameters {
         string(name: 'version', defaultValue: '', description: 'What is the Artifact Version?')
-        string(name: 'environment', defaultValue: '', description: 'What is the environment?')
+        string(name: 'environment', defaultValue: 'dev', description: 'What is the environment?')
         booleanParam(name: 'Create', defaultValue: 'false', description: 'Toggle this to Create?')
         booleanParam(name: 'Destroy', defaultValue: 'false', description: 'Toggle this to Destroy?')
         
