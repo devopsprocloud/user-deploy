@@ -7,8 +7,8 @@ pipeline {
     parameters {
         string(name: 'version', defaultValue: '', description: 'What is the Artifact Version?')
         string(name: 'environment', defaultValue: '', description: 'What is the environment?')
-        booleanParam(name: 'create', defaultValue: 'true', description: 'Do you want to Create?')
-        booleanParam(name: 'destroy', defaultValue: 'false', description: 'Do you want to Destroy?')
+        booleanParam(name: 'Create', defaultValue: 'false', description: 'Toggle this to Create?')
+        booleanParam(name: 'Destroy', defaultValue: 'false', description: 'Toggle this to Destroy?')
         
     }
    
@@ -36,7 +36,7 @@ pipeline {
         }
         stage('Terraform Plan') {
             when {
-                expression { params.create == true }
+                expression { params.Create }
             }
             steps {
                 sh """
@@ -45,30 +45,30 @@ pipeline {
                 """
             }
         }
-        stage('Terraform Apply') {
-            when {
-                expression { params.create == true && params.destroy == false}
-            }
-            steps {
-                sh """
-                    cd terraform 
-                    terraform apply -var-file="${params.environment}/${params.environment}.tfvars" -var="app_version=${params.version}" -auto-approve
+        // stage('Terraform Apply') {
+        //     when {
+        //         expression { params.Create }
+        //     }
+        //     steps {
+        //         sh """
+        //             cd terraform 
+        //             terraform apply -var-file="${params.environment}/${params.environment}.tfvars" -var="app_version=${params.version}" -auto-approve
                     
-                """
-            }
-        }
-        stage('Terraform Destroy') {
-            when {
-                expression { params.destroy == true && params.create == false }
-            }
-            steps {
-                sh """
-                    cd terraform 
-                    terraform destroy -var-file="${params.environment}/${params.environment}.tfvars" -var="app_version=${params.version}" -auto-approve
+        //         """
+        //     }
+        // }
+        // stage('Terraform Destroy') {
+        //     when {
+        //         expression { params.Destroy }
+        //     }
+        //     steps {
+        //         sh """
+        //             cd terraform 
+        //             terraform destroy -var-file="${params.environment}/${params.environment}.tfvars" -var="app_version=${params.version}" -auto-approve
                     
-                """
-            }
-        }   
+        //         """
+        //     }
+        // }   
     }
     post {
         // always {
